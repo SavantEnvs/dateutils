@@ -1,0 +1,14 @@
+# Mayhem target `dseq` — the dateutils `dseq` command-line tool, one of the utilities src/ ships,
+# built sanitized (ASan+UBSan, halting) + SanCov + DWARF-3 by mayhem/build.sh at /mayhem/cli/dseq.
+# Raw (non-libFuzzer, process-per-input) target: `dseq FIRST [[INCREMENT] LAST]` — argv-only tool: the fuzz file supplies the arguments, one per line (mayhem/harnesses/argv_main.c).
+# The explicit 5 s Mayhem `timeout:` is the per-input hang bound; the harness adapter has no timer of its own, so a hanging input is reported by Mayhem as a timeout.
+project: savantenvs/dateutils
+target: dseq
+
+testsuite:
+  - https://$MAYHEM_DOMAIN/$MAYHEM_PROJECT/$MAYHEM_TARGET/testsuite.tar
+  - file://mayhem/dseq/testsuite
+
+cmds:
+  - cmd: /mayhem/cli/dseq @@
+    timeout: 5

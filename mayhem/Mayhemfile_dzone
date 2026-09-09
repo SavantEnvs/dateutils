@@ -1,0 +1,14 @@
+# Mayhem target `dzone` — the dateutils `dzone` command-line tool, one of the utilities src/ ships,
+# built sanitized (ASan+UBSan, halting) + SanCov + DWARF-3 by mayhem/build.sh at /mayhem/cli/dzone.
+# Raw (non-libFuzzer, process-per-input) target: `dzone [ZONENAME]... [DATE/TIME]...` — argv-only tool (it never reads stdin; without a date it converts `now`): the fuzz file supplies the arguments, one per line (mayhem/harnesses/argv_main.c) — zone-name lookup (Olson zoneinfo from the image) and date/time parsing.
+# The explicit 5 s Mayhem `timeout:` is the per-input hang bound; the harness adapter has no timer of its own, so a hanging input is reported by Mayhem as a timeout.
+project: savantenvs/dateutils
+target: dzone
+
+testsuite:
+  - https://$MAYHEM_DOMAIN/$MAYHEM_PROJECT/$MAYHEM_TARGET/testsuite.tar
+  - file://mayhem/dzone/testsuite
+
+cmds:
+  - cmd: /mayhem/cli/dzone @@
+    timeout: 5

@@ -1,0 +1,14 @@
+# Mayhem target `dtest` — the dateutils `dtest` command-line tool, one of the utilities src/ ships,
+# built sanitized (ASan+UBSan, halting) + SanCov + DWARF-3 by mayhem/build.sh at /mayhem/cli/dtest.
+# Raw (non-libFuzzer, process-per-input) target: `dtest DATE/TIME1 OP DATE/TIME2` — argv-only tool: the fuzz file supplies the arguments, one per line (mayhem/harnesses/argv_main.c).
+# The explicit 5 s Mayhem `timeout:` is the per-input hang bound; the harness adapter has no timer of its own, so a hanging input is reported by Mayhem as a timeout.
+project: savantenvs/dateutils
+target: dtest
+
+testsuite:
+  - https://$MAYHEM_DOMAIN/$MAYHEM_PROJECT/$MAYHEM_TARGET/testsuite.tar
+  - file://mayhem/dtest/testsuite
+
+cmds:
+  - cmd: /mayhem/cli/dtest @@
+    timeout: 5

@@ -1,0 +1,14 @@
+# Mayhem target `dround` — the dateutils `dround` command-line tool, one of the utilities src/ ships,
+# built sanitized (ASan+UBSan, halting) + SanCov + DWARF-3 by mayhem/build.sh at /mayhem/cli/dround.
+# Raw (non-libFuzzer, process-per-input) target: `dround RNDSPEC < input` — rounds every date/time read on stdin to the next Saturday. The fuzz bytes are staged as `@@` and the wrapper opens that file as the tool's stdin (the shell's `<` redirection, in-process; see mayhem/harnesses/stdin_main.c).
+# The explicit 5 s Mayhem `timeout:` is the per-input hang bound; the harness adapter has no timer of its own, so a hanging input is reported by Mayhem as a timeout.
+project: savantenvs/dateutils
+target: dround
+
+testsuite:
+  - https://$MAYHEM_DOMAIN/$MAYHEM_PROJECT/$MAYHEM_TARGET/testsuite.tar
+  - file://mayhem/dround/testsuite
+
+cmds:
+  - cmd: /mayhem/cli/dround Sat @@
+    timeout: 5

@@ -1,0 +1,5 @@
+project: savantenvs/dateutils
+target: fuzz_strpdt
+cmds:
+  - cmd: /mayhem/fuzz_strpdt
+    libfuzzer: true
